@@ -11,7 +11,7 @@ import enum
 import psutil
 
 
-__version__ = '2017.8.2'
+__version__ = '2017.8.3'
 
 
 PY_VERSION = (sys.version_info.major, sys.version_info.minor)
@@ -82,11 +82,7 @@ def single_pass(process=None, sections=frozenset(PerfSection)):
         )
         if len(conn_info) <= 10:
             for conn in conn_info:
-                _perf_log(
-                    'Detailed connection info = %s',
-                    conn,
-                    field_prefix='conn_'
-                )
+                _perf_log('Detailed connection info = %s', conn, field_prefix='conn_')
 
 
 def multi_pass_blocking(process=None, sections=frozenset(PerfSection), interval=60.0):
@@ -98,7 +94,7 @@ def multi_pass_blocking(process=None, sections=frozenset(PerfSection), interval=
         except:
             logger.exception('Problem logging perf stats:')
         finally:
-            time.sleep()
+            time.sleep(interval)
 
 
 def set_and_forget(process=None, sections=frozenset(PerfSection), interval=60.0):
