@@ -3,7 +3,6 @@ import sys
 import time
 import logging
 import json
-import functools
 from collections import Counter
 import threading
 import typing
@@ -16,12 +15,10 @@ __version__ = '2017.8.4'
 
 PY_VERSION = (sys.version_info.major, sys.version_info.minor)
 ASYNCIO_ALLOWED = PY_VERSION >= (3, 5)
-if ASYNCIO_ALLOWED:
-    import asyncio
 
 
 if typing.TYPE_CHECKING:  # pragma: no cover
-    from typing import NamedTuple, FrozenSet, Optional
+    from typing import NamedTuple, FrozenSet
 
 
 logger = logging.getLogger('perflog')
@@ -116,30 +113,6 @@ def set_and_forget(process=None, sections=frozenset(PerfSection), interval=60.0)
 
 
 if ASYNCIO_ALLOWED:
-    async def single_pass_async(
-            process=None,  # type: Optional[psutil.Process]
-            sections=frozenset(PerfSection),  # type: FrozenSet[PerfSection]
-            loop=None   # type: Optional[asyncio.AbstractEventLoop]
-    ):
-        # type: (...) -> None
-        """ Put an asyncio-compatible layer over the blocking call. """
-        loop = loop or asyncio.get_event_loop()
-        fn = functools.partial(single_pass, process, sections)
-        await loop.run_in_executor(None, fn)
-
-
-    async def multi_pass_async(
-            process=None,  # type: Optional[psutil.Process]
-            sections=frozenset(PerfSection),  # type: FrozenSet[PerfSection]
-            interval=60.0,  # type: int
-            loop=None  # type: Optional[asyncio.AbstractEventLoop]
-    ):
-        # type: (...) -> None
-        process = process or psutil.Process()
-        while True:
-            try:
-                await single_pass_async(process, sections, loop=loop)
-            except:  # pragma: no cover
-                logger.exception('Problem logging perf stats:')
-            finally:
-                await asyncio.sleep(interval, loop=loop)
+    # We have to do this because we are trying to be Python 2 compatible, but
+    # still allow the use of async def for Python 3.5+.
+    from perflog_async import single_pass_async, multi_pass_async
