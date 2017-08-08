@@ -10,7 +10,7 @@ import enum
 import psutil
 
 
-__version__ = '2017.8.4'
+__version__ = '2017.8.5'
 
 
 PY_VERSION = (sys.version_info.major, sys.version_info.minor)
