@@ -20,7 +20,7 @@ if ASYNCIO_ALLOWED:
     import asyncio
 
 
-if typing.TYPE_CHECKING:
+if typing.TYPE_CHECKING:  # pragma: no cover
     from typing import NamedTuple, FrozenSet, Optional
 
 
@@ -91,7 +91,7 @@ def multi_pass_blocking(process=None, sections=frozenset(PerfSection), interval=
     while True:
         try:
             single_pass(process, sections)
-        except:
+        except:  # pragma: no cover
             logger.exception('Problem logging perf stats:')
         finally:
             time.sleep(interval)
@@ -139,7 +139,7 @@ if ASYNCIO_ALLOWED:
         while True:
             try:
                 await single_pass_async(process, sections, loop=loop)
-            except:
+            except:  # pragma: no cover
                 logger.exception('Problem logging perf stats:')
             finally:
                 await asyncio.sleep(interval, loop=loop)

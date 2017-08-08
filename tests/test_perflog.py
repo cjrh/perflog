@@ -2,9 +2,40 @@ import logging
 import time
 import pytest
 import perflog
+import socket
+import threading
+
+
+PORT  = 9007
+
+
+def listen():
+    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    serversocket.bind(('localhost', PORT))
+    serversocket.listen(5)
+    while 1:
+        (s, address) = serversocket.accept()
+
+
+def client_connect():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(('localhost', PORT))
 
 
 def test_perf_stats_worker(sneaky_filter):
+
+    # Get at least one socket connection up
+    server_thread = threading.Thread(target=listen)
+    server_thread.daemon = True
+    server_thread.start()
+
+    time.sleep(0.5)
+
+    client_thread = threading.Thread(target=client_connect)
+    client_thread.daemon = True
+    client_thread.start()
+
+    time.sleep(0.5)
 
     perflog.set_and_forget()
 
