@@ -1,3 +1,5 @@
+psutil
+enum34; python_version <= '2.7'
 typing; python_version < '3.5'
 pytest
 pytest-cov
