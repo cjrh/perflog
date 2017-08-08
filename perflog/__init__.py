@@ -10,7 +10,7 @@ import enum
 import psutil
 
 
-__version__ = '2017.8.5'
+__version__ = '2017.8.7'
 
 
 PY_VERSION = (sys.version_info.major, sys.version_info.minor)
@@ -115,4 +115,4 @@ def set_and_forget(process=None, sections=frozenset(PerfSection), interval=60.0)
 if ASYNCIO_ALLOWED:
     # We have to do this because we are trying to be Python 2 compatible, but
     # still allow the use of async def for Python 3.5+.
-    from perflog_async import single_pass_async, multi_pass_async
+    from .async import single_pass_async, multi_pass_async
